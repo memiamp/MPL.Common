@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
 
-namespace MPL.Common
+namespace MPL.Common.Runtime.Serialization
 {
     /// <summary>
     /// A class that provides serialisation functions.
