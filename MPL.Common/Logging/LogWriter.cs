@@ -58,7 +58,7 @@ namespace MPL.Common.Logging
             {
                 string StackTrace = string.Empty;
 
-                Message += string.Format("{0}: {1}|{2}||", Count, InnerEx.GetType().FullName, InnerEx.Message);
+                Message += $"{Count}: {InnerEx.GetType().FullName}|{InnerEx.Message}||";
                 Message += InnerEx.StackTrace.Replace("\r\n", "|");
                 Message += "||";
                 InnerEx = InnerEx.InnerException;

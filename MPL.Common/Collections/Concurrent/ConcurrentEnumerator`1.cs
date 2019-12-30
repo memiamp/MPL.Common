@@ -8,7 +8,7 @@ namespace MPL.Common.Collections.Concurrent
     /// A class that defines an enumerator for a concurrent collection.
     /// </summary>
     /// <typeparam name="T">A T that is the type being enumerated.</typeparam>
-    public class ConcurrentEnumerator<T> : IEnumerator<T>
+    public sealed class ConcurrentEnumerator<T> : IEnumerator<T>
     {
         #region Constructors
         /// <summary>
@@ -32,8 +32,10 @@ namespace MPL.Common.Collections.Concurrent
         #region Interfaces
         #region _IEnumerator<T>_
         #region __Methods__
-        void IDisposable.Dispose()
-        { }
+        public void Dispose()
+        {
+            ((IEnumerator<T>)this).Dispose();
+        }
 
         bool IEnumerator.MoveNext()
         {

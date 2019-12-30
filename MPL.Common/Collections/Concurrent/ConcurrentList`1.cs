@@ -8,7 +8,7 @@ namespace MPL.Common.Collections.Concurrent
     /// A class that defines a thread-safe concurrent list of T.
     /// </summary>
     /// <typeparam name="T">A T that is the type contained by the list.</typeparam>
-    public class ConcurrentList<T> : IList<T>
+    public sealed class ConcurrentList<T> : IList<T>
     {
         #region Constructors
         /// <summary>

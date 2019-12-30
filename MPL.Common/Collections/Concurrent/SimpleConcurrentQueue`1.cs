@@ -7,7 +7,7 @@ namespace MPL.Common.Collections.Concurrent
     /// A class that defines a simple, thread-safe synchronized generic queue.
     /// </summary>
     /// <typeparam name="T">A T that is the type contained by the queue.</typeparam>
-    public class SimpleConcurrentQueue<T>
+    public sealed class SimpleConcurrentQueue<T>
     {
         #region Constructors
         /// <summary>

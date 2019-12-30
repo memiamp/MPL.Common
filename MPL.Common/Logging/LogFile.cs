@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MPL.Common.Collections.Concurrent;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -13,10 +14,10 @@ namespace MPL.Common.Logging
         #region Constructors
         static LogFile()
         {
-            _Consoles = new SynchronizedList<IConsole>();
+            _Consoles = new ConcurrentList<IConsole>();
             LogFilePath = AppDomain.CurrentDomain.BaseDirectory;
             MaximumPriority = LogFileEntryPriority.Debug;
-            _Messages = new SynchronizedQueue<string>();
+            _Messages = new SimpleConcurrentQueue<string>();
             _PreviousMessages = new List<string>();
 
             LogWriter.LogMessage("Created log file");
@@ -32,7 +33,7 @@ namespace MPL.Common.Logging
         private static IList<IConsole> _Consoles;
         private static bool _IsRunning;
         private static StreamWriter _LogFile;
-        private static SynchronizedQueue<string> _Messages;
+        private static SimpleConcurrentQueue<string> _Messages;
         private static List<string> _PreviousMessages;
         private static Thread _RunLogWriterThread;
 
@@ -96,7 +97,7 @@ namespace MPL.Common.Logging
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException(string.Format("Unable to create log file '{0}", LogFilePath), ex);
+                throw new InvalidOperationException($"Unable to create log file '{LogFilePath}'", ex);
             }
         }
 
@@ -114,7 +115,7 @@ namespace MPL.Common.Logging
             string Timestamp;
 
             Timestamp = entry.Timestamp.ToString("yyyy-MM-dd HH-mm-ss.ffff");
-            ReturnValue = string.Format("{0},{1},{2},{3},{4}", new object[] { Timestamp, entry.Priority, entry.Component, entry.Operation, entry.Message }); ;
+            ReturnValue = $"{Timestamp},{entry.Priority},{entry.Component},{entry.Operation},{entry.Message}";
 
             return ReturnValue;
         }
@@ -192,8 +193,7 @@ namespace MPL.Common.Logging
 
                 _IsRunning = true;
 
-                _RunLogWriterThread = new Thread(new ThreadStart(RunLogWriter));
-                _RunLogWriterThread.Name = "Log Writer Thread";
+                _RunLogWriterThread = new Thread(new ThreadStart(RunLogWriter)) { Name = "Log Writer Thread" };
                 _RunLogWriterThread.Start();
 
                 LogWriter.LogMessage("Log file started");

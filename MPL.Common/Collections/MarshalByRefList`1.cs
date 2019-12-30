@@ -8,7 +8,7 @@ namespace MPL.Common.Collections
     /// A generic collection class that is suitable for remote proxy consumption.
     /// </summary>
     /// <typeparam name="T">Any object that derives from MarshalByRefObject.</typeparam>
-    public class MarshalByRefList<T> : MarshalByRefObject, IEnumerable, IList<T>
+    public sealed class MarshalByRefList<T> : MarshalByRefObject, IEnumerable, IList<T>
         where T : MarshalByRefObject
     {
         #region Constructors
@@ -24,7 +24,7 @@ namespace MPL.Common.Collections
 
         #region Declarations
         #region _Members_
-        protected ArrayList _List;
+        private ArrayList _List;
 
         #endregion
         #endregion
