@@ -31,47 +31,83 @@ namespace MPL.Common.Collections.Concurrent
         #region Interfaces
         #region _IList<T>_
         #region __Methods__
-        void ICollection<T>.Add(T item)
+        /// <summary>
+        /// Adds an item to the list.
+        /// </summary>
+        /// <param name="item">A T that is the item to add.</param>
+        public void Add(T item)
         {
             _List.Add(item);
         }
 
-        void ICollection<T>.Clear()
+        /// <summary>
+        /// Clears the list.
+        /// </summary>
+        public void Clear()
         {
             _List.Clear();
         }
 
-        bool ICollection<T>.Contains(T item)
+        /// <summary>
+        /// Gets an indication of whether the list contains the specified item.
+        /// </summary>
+        /// <param name="item">A T that is the item to check.</param>
+        /// <returns>A bool that indicates the result.</returns>
+        public bool Contains(T item)
         {
             return _List.Contains(item);
         }
 
-        void ICollection<T>.CopyTo(T[] array, int arrayIndex)
+        /// <summary>
+        /// Copies the contents of the list from the specified position into the target array.
+        /// </summary>
+        /// <param name="array">An array of T that is the array to copy to.</param>
+        /// <param name="arrayIndex">An int indicating the index of the first item to copy.</param>
+        public void CopyTo(T[] array, int arrayIndex)
         {
             _List.CopyTo(array, arrayIndex);
         }
 
-        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        /// <summary>
+        /// Gets an enumerator for the list.
+        /// </summary>
+        /// <returns>An IEnumerator of type T for the list.</returns>
+        public IEnumerator<T> GetEnumerator()
         {
             return new ConcurrentEnumerator<T>(_List.GetEnumerator());
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return _List.GetEnumerator();
-        }
-
-        int IList<T>.IndexOf(T item)
+        /// <summary>
+        /// Gets the index of the specified item.
+        /// </summary>
+        /// <param name="item">A T that is the item to get the index of.</param>
+        /// <returns>An int indicating the index of the item.</returns>
+        public int IndexOf(T item)
         {
             return _List.IndexOf(item);
         }
 
-        void IList<T>.Insert(int index, T item)
+        /// <summary>
+        /// Inserts an item into the list at the specified index.
+        /// </summary>
+        /// <param name="index">An int indicating the position to insert the item at.</param>
+        /// <param name="item">A T that is the item to insert.</param>
+        public void Insert(int index, T item)
         {
             _List.Insert(index, item);
         }
 
-        bool ICollection<T>.Remove(T item)
+        /// <summary>
+        /// Removes the specified item from the list.
+        /// </summary>
+        /// <param name="item">A T that is the item to remove.</param>
+        /// <returns>A bool indicating whether the item was removed.</returns>
+        public bool Remove(T item)
         {
             bool ReturnValue = false;
 
@@ -84,25 +120,40 @@ namespace MPL.Common.Collections.Concurrent
             return ReturnValue;
         }
 
-        void IList<T>.RemoveAt(int index)
+        /// <summary>
+        /// Removes the item from the list at the specified index.
+        /// </summary>
+        /// <param name="index">An int indicating the index to remove the item from.</param>
+        public void RemoveAt(int index)
         {
             _List.RemoveAt(index);
         }
 
         #endregion
         #region __Properties__
-        T IList<T>.this[int index]
+        /// <summary>
+        /// Gets or sets the item at the specified index.
+        /// </summary>
+        /// <param name="index">An indicating the index of the item.</param>
+        /// <returns>A T that is the item at the index.</returns>
+        public T this[int index]
         {
             get { return (T)_List[index]; }
             set { _List[index] = value; }
         }
 
-        int ICollection<T>.Count
+        /// <summary>
+        /// Gets the count of items in the list.
+        /// </summary>
+        public int Count
         {
             get { return _List.Count; }
         }
 
-        bool ICollection<T>.IsReadOnly
+        /// <summary>
+        /// Gets an indication of whether the list is read-only.
+        /// </summary>
+        public bool IsReadOnly
         {
             get { return _List.IsReadOnly; }
         }
