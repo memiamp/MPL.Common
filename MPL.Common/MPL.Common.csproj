@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrayExtensions.cs" />
     <Compile Include="Collections\Concurrent\ConcurrentEnumerator`1.cs" />
     <Compile Include="Collections\Concurrent\ConcurrentList`1.cs" />
     <Compile Include="Collections\Concurrent\ConcurrentQueueExtensions.cs" />
@@ -51,11 +52,14 @@
     <Compile Include="Collections\Specialized\StringCollectionExtensions.cs" />
     <Compile Include="ComponentModel\DataAnnotations\NonZeroEnumValidationAttribute.cs" />
     <Compile Include="ComponentModel\LocalizedDisplayNameAttribute.cs" />
+    <Compile Include="EventHandlerExtensions.cs" />
+    <Compile Include="Net\Sockets\NetworkStreamExtensions.cs" />
     <Compile Include="Logging\Globals.cs" />
     <Compile Include="Logging\IConsole.cs" />
     <Compile Include="Logging\LogFile.cs" />
     <Compile Include="Logging\LogFileEntry.cs" />
     <Compile Include="Logging\LogWriter.cs" />
+    <Compile Include="Net\Sockets\TcpClientExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomNumberGenerator.cs" />
     <Compile Include="Reflection\DynamicCodeExecutor.cs" />
@@ -64,6 +68,8 @@
     <Compile Include="Runtime\Serialization\Serializer.cs" />
     <Compile Include="Runtime\Serialization\Serializer`1.cs" />
     <Compile Include="Collections\Concurrent\SimpleConcurrentQueue`1.cs" />
+    <Compile Include="Threading\CancellationTokenExtensions.cs" />
+    <Compile Include="Threading\Tasks\TaskExtensions.cs" />
     <Compile Include="Win32\ConsoleOutput.cs" />
     <Compile Include="Win32\HttpApiIntegration.cs" />
     <Compile Include="Win32\HttpApi\Globals.cs" />
