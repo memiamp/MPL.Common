@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
@@ -48,6 +49,8 @@
     <Compile Include="Collections\Concurrent\IConcurrentList`1.cs" />
     <Compile Include="Collections\MarshalByRefList`1.cs" />
     <Compile Include="Collections\Specialized\StringCollectionExtensions.cs" />
+    <Compile Include="ComponentModel\DataAnnotations\NonZeroEnumValidationAttribute.cs" />
+    <Compile Include="ComponentModel\LocalizedDisplayNameAttribute.cs" />
     <Compile Include="Logging\Globals.cs" />
     <Compile Include="Logging\IConsole.cs" />
     <Compile Include="Logging\LogFile.cs" />

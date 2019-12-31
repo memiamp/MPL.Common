@@ -47,6 +47,7 @@
       <HintPath>..\packages\MSTest.TestFramework.1.3.2\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
@@ -54,6 +55,9 @@
     <Compile Include="Collections\Concurrent\ConcurrentListTest.cs" />
     <Compile Include="Collections\Concurrent\ConcurrentQueueExtensionsTests.cs" />
     <Compile Include="Collections\Specialized\StringCollectionExtensionsTest.cs" />
+    <Compile Include="ComponentModel\DataAnnotations\NonZeroEnumValidationAttributeTests.cs" />
+    <Compile Include="ComponentModel\LocalizedDisplayNameAttributeTestsResourceProvider.cs" />
+    <Compile Include="ComponentModel\LocalizedDisplayNameAttributeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reflection\DyanmicCodeExecutorTests.cs" />
     <Compile Include="Reflection\InstanceCreatorTests.cs" />
