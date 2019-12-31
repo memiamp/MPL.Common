@@ -1,25 +1,24 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
 
-namespace MPL.Common
+namespace MPL.Common.Runtime.Serialization
 {
     /// <summary>
     /// A class that provides serialisation functions.
     /// </summary>
     /// <typeparam name="T">A T that is the class type to be serialised or deserialised.</typeparam>
-    public static class Serialiser<T>
+    public static class Serializer<T>
         where T : class
     {
         #region Constructors
         /// <summary>
         /// Creates a new static instance of the class.
         /// </summary>
-        static Serialiser()
+        static Serializer()
         {
-            _Encoding = Encoding.UTF8;
+            _Encoding = Encoding.Default;
         }
 
         #endregion
@@ -67,7 +66,7 @@ namespace MPL.Common
         public static T Deserialise(Stream data)
         {
             object SourceObject;
-            DataContractJsonSerializer Serialiser;
+            System.Runtime.Serialization.Json.DataContractJsonSerializer Serialiser;
             T ReturnValue = default(T);
 
             // Create the serialiser
@@ -97,12 +96,16 @@ namespace MPL.Common
         /// <returns>A T desrialised from the data.</returns>
         public static T Deserialise(string data, Encoding encoding)
         {
-            byte[] Data;
-            T ReturnValue;
+            T ReturnValue = default(T);
 
-            // Convert the string to a byte array and deserialise
-            Data = encoding.GetBytes(data);
-            ReturnValue = Deserialise(Data);
+            if (data != null)
+            {
+                byte[] Data;
+
+                // Convert the string to a byte array and deserialise
+                Data = encoding.GetBytes(data);
+                ReturnValue = Deserialise(Data);
+            }
 
             return ReturnValue;
         }
@@ -114,7 +117,7 @@ namespace MPL.Common
         /// <returns>An array of byte containing the serialised object.</returns>
         public static byte[] Serialise(T obj)
         {
-            DataContractJsonSerializer Serialiser;
+            System.Runtime.Serialization.Json.DataContractJsonSerializer Serialiser;
             byte[] ReturnValue = null;
             MemoryStream TargetStream;
 
@@ -124,7 +127,7 @@ namespace MPL.Common
             // Serialise the object
             TargetStream = new MemoryStream();
             Serialiser.WriteObject(TargetStream, obj);
-            ReturnValue = TargetStream.GetBuffer();
+            ReturnValue = TargetStream.ToArray();
 
             return ReturnValue;
         }
@@ -164,8 +167,7 @@ namespace MPL.Common
         #region _Private_
         private static DataContractJsonSerializer CreateSerialiser()
         {
-            DataContractJsonSerializerSettings Settings = new DataContractJsonSerializerSettings { EmitTypeInformation = EmitTypeInformation.Never };
-            return new DataContractJsonSerializer(typeof(T), Settings);
+            return new DataContractJsonSerializer(typeof(T));
         }
 
         #endregion
