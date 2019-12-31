@@ -1,7 +1,7 @@
 ﻿using MPL.Common.TestHelpers;
 using System;
 
-namespace MPL.Common.UnitTests.ComponentModel
+namespace MPL.Common.ComponentModel
 {
     /// <summary>
     /// A class that defines a resource provider for testing of a localized display name attribute.

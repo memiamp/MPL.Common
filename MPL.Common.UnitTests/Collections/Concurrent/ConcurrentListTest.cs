@@ -3,7 +3,7 @@ using MPL.Common.Collections.Concurrent;
 using MPL.Common.TestHelpers;
 using System;
 
-namespace MPL.Common.UnitTests.Collections.Concurrent
+namespace MPL.Common.Collections.Concurrent
 {
     [TestClass]
     public class ConcurrentListTests

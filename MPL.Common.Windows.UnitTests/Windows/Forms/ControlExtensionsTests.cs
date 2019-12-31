@@ -4,10 +4,10 @@ using MPL.Common.Windows.Forms;
 using System;
 using System.Windows.Forms;
 
-namespace MPL.Common.Windows.UnitTests.Windows.Forms
+namespace MPL.Common.Windows.Forms
 {
     [TestClass]
-    public class ControlExtensionsTest
+    public class ControlExtensionsTests
     {
         [TestMethod]
         public void ExtensionMethod_BeginUpdate_Exists()

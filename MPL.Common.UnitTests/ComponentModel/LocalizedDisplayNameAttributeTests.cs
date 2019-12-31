@@ -3,7 +3,7 @@ using MPL.Common.ComponentModel;
 using MPL.Common.TestHelpers;
 using System;
 
-namespace MPL.Common.UnitTests.ComponentModel
+namespace MPL.Common.ComponentModel
 {
     [TestClass]
     public class LocalizedDisplayNameAttributeTests

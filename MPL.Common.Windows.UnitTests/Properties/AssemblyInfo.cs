@@ -2,12 +2,12 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("MPL.Common.Windows.UnitTests")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("MPL Common Windows Library Unit Tests")]
+[assembly: AssemblyDescription("Unit tests for MPL Common Windows Library")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Martin Parkin")]
 [assembly: AssemblyProduct("MPL.Common.Windows.UnitTests")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCopyright("Copyright ©2008-2019 Martin Parkin")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

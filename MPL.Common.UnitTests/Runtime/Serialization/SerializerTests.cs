@@ -4,7 +4,7 @@ using System;
 using System.Dynamic;
 using System.Text;
 
-namespace MPL.Common.UnitTests.Runtime.Serialization
+namespace MPL.Common.Runtime.Serialization
 {
     [TestClass]
     public class SerializerTests

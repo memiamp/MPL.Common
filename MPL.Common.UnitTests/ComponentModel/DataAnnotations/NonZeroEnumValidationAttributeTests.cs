@@ -3,7 +3,7 @@ using MPL.Common.ComponentModel.DataAnnotations;
 using MPL.Common.TestHelpers;
 using System;
 
-namespace MPL.Common.UnitTests.ComponentModel.DataAnnotations
+namespace MPL.Common.ComponentModel.DataAnnotations
 {
     [TestClass]
     public class NonZeroEnumValidationAttributeTests

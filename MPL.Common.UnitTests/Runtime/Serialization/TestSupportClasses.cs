@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace MPL.Common.UnitTests.Runtime.Serialization
+namespace MPL.Common.Runtime.Serialization
 {
     [DataContract()]
     public class SerialiserTestDummyClassUnnamed

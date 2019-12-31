@@ -8,7 +8,7 @@
     <ProjectGuid>{69DF8EB3-A461-4009-BBE6-E7AA68CF3E7A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MPL.Common.Windows.UnitTests</RootNamespace>
+    <RootNamespace>MPL.Common</RootNamespace>
     <AssemblyName>MPL.Common.Windows.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

@@ -4,7 +4,7 @@ using MPL.Common.TestHelpers;
 using System;
 using System.Collections.Specialized;
 
-namespace MPL.Common.UnitTests.Collections.Specialized
+namespace MPL.Common.Collections.Specialized
 {
     [TestClass]
     public class StringCollectionExtensionsTests

@@ -4,7 +4,7 @@ using MPL.Common.TestHelpers;
 using System;
 using System.Collections.Concurrent;
 
-namespace MPL.Common.UnitTests.Collections.Concurrent
+namespace MPL.Common.Collections.Concurrent
 {
     [TestClass]
     public class ConcurrentQueueExtensionsTests

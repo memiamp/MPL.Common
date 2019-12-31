@@ -3,10 +3,10 @@ using MPL.Common.Reflection;
 using MPL.Common.TestHelpers;
 using System;
 
-namespace MPL.Common.UnitTests.Reflection
+namespace MPL.Common.Reflection
 {
     [TestClass]
-    public class DynamicCodeExecutorTest
+    public class DynamicCodeExecutorTests
     {
         [TestMethod]
         public void TryGetDynamicCodeOutput_InvalidCode_IsValidResult()
