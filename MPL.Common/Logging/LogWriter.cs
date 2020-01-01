@@ -69,6 +69,35 @@ namespace MPL.Common.Logging
             Entry = new LogFileEntry(LogFileEntryPriority.Error, Component, Operation, Message);
             LogFile.WriteEntry(Entry);
         }
+        /// <summary>
+        /// Logs an exception with the specified error message.
+        /// </summary>
+        /// <param name="ex">An Exception that is the exception to log.</param>
+        /// <param name="errorMessage">A string containing the error message to log.</param>
+        public static void LogException(Exception ex, string errorMessage)
+        {
+            int Count = 0;
+            LogFileEntry Entry;
+            Exception InnerEx;
+            string Message = string.Empty;
+
+            InnerEx = ex;
+            while (InnerEx != null)
+            {
+                string StackTrace = string.Empty;
+
+                Message += $"{Count}: {InnerEx.GetType().FullName}|{InnerEx.Message}||";
+                Message += InnerEx.StackTrace.Replace("\r\n", "|");
+                Message += "||";
+                InnerEx = InnerEx.InnerException;
+                Count++;
+            }
+
+            GetSourceDetails(out string Component, out string Operation);
+            LogMessage(LogFileEntryPriority.Error, errorMessage);
+            Entry = new LogFileEntry(LogFileEntryPriority.Error, Component, Operation, Message);
+            LogFile.WriteEntry(Entry);
+        }
 
         /// <summary>
         /// Logs a message.
