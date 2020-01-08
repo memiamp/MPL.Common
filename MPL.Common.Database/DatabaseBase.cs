@@ -240,7 +240,8 @@ namespace MPL.Common.Database
                     DataAdapter = GetDataAdapter(command, tableNames);
                     results = new DataSet();
                     DataAdapter.Fill(results);
-                    ReturnValue = GetResultParameterValue(command);
+                    if (SupportsResultParam)
+                        ReturnValue = GetResultParameterValue(command);
                 }
             }
             catch (Exception ex)
@@ -347,6 +348,78 @@ namespace MPL.Common.Database
         }
 
         /// <summary>
+        /// Executes the specified command and provides results in a DataSet.
+        /// </summary>
+        /// <param name="command">An IDbCommand that is the command to execute.</param>
+        /// <param name="tableNames">An array of TTableEnum indicating the table names for the result set.</param>
+        /// <returns>A DataSet that will be populated with the results.</returns>
+        protected DataSet ExecuteReaderToDataSet(IDbCommand command, TTableEnum[] tableNames = null)
+        {
+            ExecuteReader(command, out DataSet returnValue, tableNames);
+            return returnValue;
+        }
+        /// <summary>
+        /// Executes the specified command with a single parameter and provides results in a DataSet.
+        /// </summary>
+        /// <param name="commandName">A TCommandEnum that is the command to execute.</param>
+        /// <param name="parameterName">A TParameterEnum indicating the name of the parameter.</param>
+        /// <param name="parameterValue">An object indicating the value of the parameter.</param>
+        /// <param name="tableNames">An array of TTableEnum indicating the table names for the result set.</param>
+        /// <returns>A DataSet that will be populated with the results.</returns>
+        protected DataSet ExecuteReaderToDataSet(TCommandEnum commandName, TParameterEnum parameterName, object parameterValue, TTableEnum[] tableNames = null)
+        {
+            ExecuteReader(commandName, parameterName, parameterValue, out DataSet returnValue, tableNames);
+            return returnValue;
+        }
+        /// <summary>
+        /// Executes the specified command and provides results in a DataSet.
+        /// </summary>
+        /// <param name="commandName">A TCommandEnum that is the command to execute.</param>
+        /// <param name="tableNames">An array of TTableEnum indicating the table names for the result set.</param>
+        /// <returns>A DataSet that will be populated with the results.</returns>
+        protected DataSet ExecuteReaderToDataSet(TCommandEnum commandName, TTableEnum[] tableNames = null)
+        {
+            ExecuteReader(commandName, out DataSet returnValue, tableNames);
+            return returnValue;
+        }
+
+        /// <summary>
+        /// Executes the specified command and provides results in a DataTable.
+        /// </summary>
+        /// <param name="command">An IDbCommand that is the command to execute.</param>
+        /// <param name="tableNumber">An int indicating the zero-based table number to return.</param>
+        /// <returns>A DataTable that will be populated with the results.</returns>
+        protected DataTable ExecuteReaderToDataTable(IDbCommand command, int tableNumber = 0)
+        {
+            ExecuteReader(command, out DataTable returnValue, tableNumber);
+            return returnValue;
+        }
+        /// <summary>
+        /// Executes the specified command and provides results in a DataTable.
+        /// </summary>
+        /// <param name="commandName">A TCommandEnum that is the command to execute.</param>
+        /// <param name="tableNumber">An int indicating the zero-based table number to return.</param>
+        /// <returns>A DataTable that will be populated with the results.</returns>
+        protected DataTable ExecuteReaderToDataTable(TCommandEnum commandName, int tableNumber = 0)
+        {
+            ExecuteReader(commandName, out DataTable returnValue, tableNumber);
+            return returnValue;
+        }
+        /// <summary>
+        /// Executes the specified command with a single parameter and provides results in a DataTable.
+        /// </summary>
+        /// <param name="commandName">A TCommandEnum that is the command to execute.</param>
+        /// <param name="parameterName">A TParameterEnum indicating the name of the parameter.</param>
+        /// <param name="parameterValue">An object indicating the value of the parameter.</param>
+        /// <param name="tableNumber">An int indicating the zero-based table number to return.</param>
+        /// <returns>A DataTable that will be populated with the results.</returns>
+        protected DataTable ExecuteReaderToDataTable(TCommandEnum commandName, TParameterEnum parameterName, object parameterValue, int tableNumber = 0)
+        {
+            ExecuteReader(commandName, parameterName, parameterValue, out DataTable returnValue, tableNumber);
+            return returnValue;
+        }
+
+        /// <summary>
         /// Gets a connection with the specified connection parameters.
         /// </summary>
         /// <param name="connectionParameters">A string containing the connection parameters.</param>
@@ -379,7 +452,6 @@ namespace MPL.Common.Database
         /// <param name="parameter">A TParameterEnum that is the parameter to get the name of.</param>
         /// <returns>A string containing the name of the parameter.</returns>
         protected abstract string GetName(TParameterEnum parameter);
-
         /// <summary>
         /// Overridden in derived clases to get the name of a table.
         /// </summary>
@@ -618,7 +690,37 @@ namespace MPL.Common.Database
         #region __Methods__
         bool IDatabaseBase<TParameterEnum, TTableEnum>.GetColumnValue(DataRow row, TParameterEnum column, out bool value)
         {
-            return GetColumnValue(row, column, out value);
+            bool ReturnValue = false;
+
+            // Defaults
+            value = false;
+
+            if (_DatabaseBaseInterface.GetColumnValue(row, column, out object Value))
+            {
+                ReturnValue = true;
+                if (!GetObjectAsValue(Value, out value))
+                {
+                    if (Value != null)
+                    {
+                        try
+                        {
+                            switch (Value.ToString().ToUpper())
+                            {
+                                case "1":
+                                case "TRUE":
+                                case "Y":
+                                case "YES":
+                                    value = true;
+                                    break;
+                            }
+                        }
+                        catch (Exception)
+                        { }
+                    }
+                }
+            }
+
+            return ReturnValue;
         }
         bool IDatabaseBase<TParameterEnum, TTableEnum>.GetColumnValue(DataRow row, TParameterEnum column, out DateTime value)
         {
