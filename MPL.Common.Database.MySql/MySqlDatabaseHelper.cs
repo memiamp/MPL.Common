@@ -13,8 +13,10 @@ namespace MPL.Common.Database.MySql
         /// <summary>
         /// Creates a new instance of the class.
         /// </summary>
-        public MySqlDatabaseHelper()
+        /// <param name="useParameterPrefix">A bool indicating whether to use parameter name prefixes when creating parameters.</param>
+        public MySqlDatabaseHelper(bool useParameterPrefix = true)
         {
+            UseParameterPrefix = useParameterPrefix;
             _DatabaseHelperInterface = this;
         }
 
@@ -28,6 +30,43 @@ namespace MPL.Common.Database.MySql
         #endregion
 
         #region Methods
+        #region _Private_
+        private string GetParameterName(string name, ParameterDirection direction)
+        {
+            string returnValue;
+
+            if (UseParameterPrefix)
+            {
+                string prefix = null;
+
+                switch (direction)
+                {
+                    case ParameterDirection.Input:
+                        prefix = "i";
+                        break;
+
+                    case ParameterDirection.InputOutput:
+                        prefix = "io";
+                        break;
+
+                    case ParameterDirection.Output:
+                        prefix = "o";
+                        break;
+
+                    case ParameterDirection.ReturnValue:
+                        prefix = "rv";
+                        break;
+                }
+
+                returnValue = $"{prefix}_{name}";
+            }
+            else
+                returnValue = name;
+
+            return returnValue;
+        }
+
+        #endregion
         #region _Protected_
         protected override IDatabaseHelper<MySqlDbType, MySqlCommand, MySqlConnection, MySqlDataAdapter, MySqlParameter> GetHelperInterface()
         {
@@ -35,6 +74,14 @@ namespace MPL.Common.Database.MySql
         }
 
         #endregion
+        #endregion
+
+        #region Properties
+        /// <summary>
+        /// Gets or sets an indication of whether to use a parameter prefix when creating parameters.
+        /// </summary>
+        public bool UseParameterPrefix { get; set; }
+
         #endregion
 
         #region Interfaces
@@ -80,7 +127,7 @@ namespace MPL.Common.Database.MySql
         {
             MySqlParameter ReturnValue;
 
-            ReturnValue = new MySqlParameter(name, dataType)
+            ReturnValue = new MySqlParameter(GetParameterName(name, direction), dataType)
             {
                 Direction = direction,
                 Value = value
