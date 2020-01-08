@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
 
@@ -66,7 +67,7 @@ namespace MPL.Common.Runtime.Serialization
         public static T Deserialise(Stream data)
         {
             object SourceObject;
-            System.Runtime.Serialization.Json.DataContractJsonSerializer Serialiser;
+            DataContractJsonSerializer Serialiser;
             T ReturnValue = default(T);
 
             // Create the serialiser
@@ -117,7 +118,7 @@ namespace MPL.Common.Runtime.Serialization
         /// <returns>An array of byte containing the serialised object.</returns>
         public static byte[] Serialise(T obj)
         {
-            System.Runtime.Serialization.Json.DataContractJsonSerializer Serialiser;
+            DataContractJsonSerializer Serialiser;
             byte[] ReturnValue = null;
             MemoryStream TargetStream;
 
@@ -167,7 +168,11 @@ namespace MPL.Common.Runtime.Serialization
         #region _Private_
         private static DataContractJsonSerializer CreateSerialiser()
         {
-            return new DataContractJsonSerializer(typeof(T));
+            DataContractJsonSerializerSettings Settings = new DataContractJsonSerializerSettings
+            {
+                EmitTypeInformation = EmitTypeInformation.Never
+            };
+            return new DataContractJsonSerializer(typeof(T), Settings);
         }
 
         #endregion
