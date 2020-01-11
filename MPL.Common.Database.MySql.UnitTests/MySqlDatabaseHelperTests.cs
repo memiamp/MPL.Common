@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MPL.Common.Database;
-using MPL.Common.Database.MySql;
+using MPL.Common.TestHelpers;
 using MySql.Data.MySqlClient;
 using System;
 using System.Data;
@@ -10,7 +9,36 @@ namespace MPL.Common.Database.MySql
     [TestClass]
     public class MySqlDatabaseHelperTests : DatabaseHelperTestsBase<MySqlDbType, MySqlCommand, MySqlConnection, MySqlDataAdapter, MySqlParameter>
     {
+        #region Declarations
+        #region _Members_
+        private bool _UseParameterPrefix;
+
+        #endregion
+        #endregion
+
         #region Methods
+        #region _Private_
+        private bool GetUseParameterPrefix()
+        {
+            bool returnValue = _UseParameterPrefix;
+
+            _UseParameterPrefix = false;
+
+            return returnValue;
+        }
+
+        private void TestPrefixedParameter(string prefix, ParameterDirection parameterDirection)
+        {
+            MySqlParameter parameter;
+            string parameterName;
+
+            _UseParameterPrefix = true;
+            parameterName = TestDataTestHelper.GetString();
+            parameter = (MySqlParameter)GetHelperInstance().CreateParameter(parameterName, DbType.String, 20, parameterDirection, null);
+            TestParameter(parameter, $"{prefix}_{parameterName}", null, MySqlDbType.String, parameterDirection, 20);
+        }
+
+        #endregion
         #region _Protected_
         protected override MySqlDbType GetDbTypeDateTime()
         {
@@ -39,12 +67,26 @@ namespace MPL.Common.Database.MySql
 
         protected override IDatabaseHelper GetHelperInstance()
         {
-            return new MySqlDatabaseHelper();
+            MySqlDatabaseHelper returnValue;
+
+            returnValue = new MySqlDatabaseHelper
+            {
+                UseParameterPrefix = GetUseParameterPrefix()
+            };
+
+            return returnValue;
         }
 
         protected override IDatabaseHelper<MySqlDbType, MySqlCommand, MySqlConnection, MySqlDataAdapter, MySqlParameter> GetHelperInstanceGeneric()
         {
-            return new MySqlDatabaseHelper();
+            MySqlDatabaseHelper returnValue;
+
+            returnValue = new MySqlDatabaseHelper
+            {
+                UseParameterPrefix = GetUseParameterPrefix()
+            };
+
+            return returnValue;
         }
 
         protected override void TestParameter(MySqlParameter parameter, string parameterName, object parameterValue, MySqlDbType parameterDataType, ParameterDirection parameterDirection = ParameterDirection.Input, int parameterSize = 0)
@@ -55,6 +97,32 @@ namespace MPL.Common.Database.MySql
             Assert.AreEqual(parameterDirection, parameter.Direction);
             if (parameterSize > 0)
                 Assert.AreEqual(parameterSize, parameter.Size);
+        }
+
+        #endregion
+        #region _Tests_
+        [TestMethod]
+        public void CreateParameter_InputWithParameterPrefix_ParameterCreatedCorrectly()
+        {
+            TestPrefixedParameter("i", ParameterDirection.Input);
+        }
+
+        [TestMethod]
+        public void CreateParameter_InputOuputWithParameterPrefix_ParameterCreatedCorrectly()
+        {
+            TestPrefixedParameter("io", ParameterDirection.InputOutput);
+        }
+
+        [TestMethod]
+        public void CreateParameter_OutputWithParameterPrefix_ParameterCreatedCorrectly()
+        {
+            TestPrefixedParameter("o", ParameterDirection.Output);
+        }
+
+        [TestMethod]
+        public void CreateParameter_ReturnValueWithParameterPrefix_ParameterCreatedCorrectly()
+        {
+            TestPrefixedParameter("rv", ParameterDirection.ReturnValue);
         }
 
         #endregion
