@@ -191,7 +191,10 @@ namespace MPL.Common.Database
             int ReturnValue;
 
             ReturnValue = ExecuteNonQuery(command);
-            result = GetResultParameterValue(command);
+            if (SupportsResultParam)
+                result = GetResultParameterValue(command);
+            else
+                result = 0;
 
             return ReturnValue;
         }
@@ -212,6 +215,30 @@ namespace MPL.Common.Database
             executionResult = ExecuteNonQuery(TheCommand, out int ReturnValue);
 
             return ReturnValue;
+        }
+        /// <summary>
+        /// Executes the specified command with a single parameter in non-query mode.
+        /// </summary>
+        /// <param name="commandName">A TCommandEnum that is the command to execute.</param>
+        /// <param name="parameterNames">An array of TParameterEnum indicating the name of the parameters.</param>
+        /// <param name="parameterValues">An array of object indicating the value of the parameters.</param>
+        /// <param name="result">An int that will be set to the result of the execution.</param>
+        /// <returns>An int containing the value of the result parametr.</returns>
+        protected int ExecuteNonQuery(TCommandEnum commandName, TParameterEnum[] parameterNames, object[] parameterValues, out int executionResult)
+        {
+            if (parameterNames != null && parameterValues != null && parameterNames.Length == parameterValues.Length)
+            {
+                IDbCommand TheCommand;
+
+                TheCommand = BuildCommand(commandName);
+                for (int i = 0; i < parameterNames.Length; i++)
+                    AddParameter(TheCommand, parameterNames[i], parameterValues[i]);
+                executionResult = ExecuteNonQuery(TheCommand, out int ReturnValue);
+
+                return ReturnValue;
+            }
+            else
+                throw new ArgumentException("The specified parameters and values are NULL or of non-equal length", nameof(parameterNames));
         }
 
         /// <summary>
