@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArrayExtensionsTests.cs" />
+    <Compile Include="ByteExtensionsTests.cs" />
     <Compile Include="Collections\Concurrent\ConcurrentListTests.cs" />
     <Compile Include="Collections\Concurrent\ConcurrentQueueExtensionsTests.cs" />
     <Compile Include="Collections\Specialized\StringCollectionExtensionsTest.cs" />
@@ -69,6 +70,8 @@
     <Compile Include="Runtime\Serialization\SerialiserTTests.cs" />
     <Compile Include="Runtime\Serialization\SerializerTests.cs" />
     <Compile Include="Runtime\Serialization\TestSupportClasses.cs" />
+    <Compile Include="Security\Principal\IIdentityExtensionsTests.cs" />
+    <Compile Include="Security\Principal\IPrincipalExtensionsTests.cs" />
     <Compile Include="Threading\CancellationTokenExtensionsTests.cs" />
     <Compile Include="Threading\Tasks\TaskExtensionsTests.cs" />
   </ItemGroup>

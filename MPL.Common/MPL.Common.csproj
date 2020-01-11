@@ -34,6 +34,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArrayExtensions.cs" />
+    <Compile Include="ByteExtensions.cs" />
     <Compile Include="Collections\Concurrent\ConcurrentEnumerator`1.cs" />
     <Compile Include="Collections\Concurrent\ConcurrentList`1.cs" />
     <Compile Include="Collections\Concurrent\ConcurrentQueueExtensions.cs" />
@@ -68,6 +70,8 @@
     <Compile Include="Runtime\Serialization\Serializer.cs" />
     <Compile Include="Runtime\Serialization\Serializer`1.cs" />
     <Compile Include="Collections\Concurrent\SimpleConcurrentQueue`1.cs" />
+    <Compile Include="Security\Principal\IIdentityExtensions.cs" />
+    <Compile Include="Security\Principal\IPrincipalExtensions.cs" />
     <Compile Include="Threading\CancellationTokenExtensions.cs" />
     <Compile Include="Threading\Tasks\TaskExtensions.cs" />
     <Compile Include="Win32\ConsoleOutput.cs" />
@@ -83,6 +87,10 @@
     <Compile Include="Win32\User32\Globals.cs" />
     <Compile Include="Win32\User32\LVGROUP.cs" />
     <Compile Include="Win32\User32\NativeMethods.cs" />
+    <Compile Include="Win32\WinSCardIntegration.cs" />
+    <Compile Include="Win32\WinSCard\Globals.cs" />
+    <Compile Include="Win32\WinSCard\NativeMethods.cs" />
+    <Compile Include="Win32\WinSCard\SCARD_READERSTATE.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
