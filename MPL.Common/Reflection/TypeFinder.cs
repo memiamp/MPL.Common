@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
@@ -31,6 +32,43 @@ namespace MPL.Common.Reflection
 
         #endregion
         #region _Public_
+        /// <summary>
+        /// Finds all types that are a subclass of the specified type.
+        /// </summary>
+        /// <typeparam name="T">The type to find subclasses of.</typeparam>
+        /// <param name="subclassType">A Type that is the subclass type.</param>
+        /// <param name="excludeSystemAssemblies">A bool that indicates whether to exclude any Microsoft.Net system assemblies from the search.</param>
+        /// <returns>An array of Type containing the types.</returns>
+        public static Type[] FindAllTypesOf<T>(bool excludeSystemAssemblies = true)
+        {
+            List<Type> returnValue;
+            
+            returnValue = new List<Type>();
+            try
+            {
+                foreach (Assembly Item in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    if (!excludeSystemAssemblies ||
+                        (excludeSystemAssemblies && !Item.FullName.StartsWith("System") && !Item.FullName.StartsWith("Microsoft")))
+                    {
+                        foreach (Type type in Item.GetTypes())
+                        {
+                            if (!type.IsAbstract && type.IsSubclassOf(typeof(T)))
+                            {
+                                returnValue.Add(type);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Unable to find types", ex);
+            }
+
+            return returnValue.ToArray();
+        }
+
         /// <summary>
         /// Finds the first type matching the specified type name from the specified assembly.
         /// </summary>
