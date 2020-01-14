@@ -8,7 +8,7 @@ namespace MPL.Common.Collections.Concurrent
     /// A class that defines a synchronised single-instance list of the specified type.
     /// </summary>
     /// <typeparam name="T">A T that is the type that is contained by the list.</typeparam>
-    public sealed class ConcurrentList<T> : IConcurrentList<T>
+    public class ConcurrentList<T> : IConcurrentList<T>
     {
         #region Constructors
         /// <summary>
@@ -155,7 +155,7 @@ namespace MPL.Common.Collections.Concurrent
         #endregion
 
         #region Interfaces
-        #region _ICollection<T>
+        #region _ICollection<T>_
         #region __Methods__
         void ICollection<T>.Add(T item)
         {
