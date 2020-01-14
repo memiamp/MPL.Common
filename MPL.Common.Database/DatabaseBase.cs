@@ -55,7 +55,7 @@ namespace MPL.Common.Database
             value = default(T);
 
             if (_DatabaseBaseInterface.GetColumnValue(row, column, out object Value))
-                ReturnValue = GetObjectAsValue(Value, out value);
+                ReturnValue = ConvertTo.GetObjectAsValue(Value, out value);
 
             return ReturnValue;
         }
@@ -500,52 +500,7 @@ namespace MPL.Common.Database
                 for (int i = 0; i < tables.Length; i++)
                     ReturnValue[i] = GetName(tables[i]);
             }
-
-            return ReturnValue;
-        }
-
-        /// <summary>
-        /// Tries to get the value of the specified object as the specified type.
-        /// </summary>
-        /// <typeparam name="T">A T that is the type that the object will be cast as.</typeparam>
-        /// <param name="Value">An object that is the object to be cast.</param>
-        /// <param name="value">A T that is the cast object, or the default value of T.</param>
-        /// <returns>A bool indicating success.</returns>
-        protected static bool GetObjectAsValue<T>(object Value, out T value)
-        {
-            bool ReturnValue = false;
-
-            // Defaults
-            value = default(T);
-
-            if (Value != null)
-            {
-                if (Value is T)
-                {
-                    ReturnValue = true;
-                    value = (T)Value;
-                }
-                else
-                {
-                    MethodInfo TryParseMethod;
-
-                    TryParseMethod = typeof(T).GetMethod("TryParse", new Type[] { typeof(string), typeof(T).MakeByRefType() });
-                    if (TryParseMethod != null)
-                    {
-                        object Result;
-                        object[] TryParseParams;
-
-                        TryParseParams = new object[] { Value.ToString(), null };
-                        Result = TryParseMethod.Invoke(null, TryParseParams);
-                        if (Result != null && Result is bool && (bool)Result)
-                        {
-                            value = (T)TryParseParams[1];
-                            ReturnValue = true;
-                        }
-                    }
-                }
-            }
-
+            
             return ReturnValue;
         }
 
@@ -644,7 +599,7 @@ namespace MPL.Common.Database
             value = default(T);
 
             if (GetParameterValue(command, parameter, out object Value))
-                ReturnValue = GetObjectAsValue(Value, out value);
+                ReturnValue = ConvertTo.GetObjectAsValue(Value, out value);
 
             return ReturnValue;
         }
@@ -725,7 +680,7 @@ namespace MPL.Common.Database
             if (_DatabaseBaseInterface.GetColumnValue(row, column, out object Value))
             {
                 ReturnValue = true;
-                if (!GetObjectAsValue(Value, out value))
+                if (!ConvertTo.GetObjectAsValue(Value, out value))
                 {
                     if (Value != null)
                     {

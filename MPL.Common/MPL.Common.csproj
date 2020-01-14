@@ -54,6 +54,7 @@
     <Compile Include="Collections\Specialized\StringCollectionExtensions.cs" />
     <Compile Include="ComponentModel\DataAnnotations\NonZeroEnumValidationAttribute.cs" />
     <Compile Include="ComponentModel\LocalizedDisplayNameAttribute.cs" />
+    <Compile Include="ConvertTo.cs" />
     <Compile Include="EventHandlerExtensions.cs" />
     <Compile Include="Net\Sockets\NetworkStreamExtensions.cs" />
     <Compile Include="Logging\Globals.cs" />
