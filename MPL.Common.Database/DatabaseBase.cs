@@ -204,6 +204,17 @@ namespace MPL.Common.Database
         /// <param name="commandName">A TCommandEnum that is the command to execute.</param>
         /// <param name="parameterName">A TParameterEnum indicating the name of the parameter.</param>
         /// <param name="parameterValue">An object indicating the value of the parameter.</param>
+        /// <returns>An int containing the value of the result parametr.</returns>
+        protected int ExecuteNonQuery(TCommandEnum commandName, TParameterEnum parameterName, object parameterValue)
+        {
+            return ExecuteNonQuery(commandName, parameterName, parameterName, out _);
+        }
+        /// <summary>
+        /// Executes the specified command with a single parameter in non-query mode.
+        /// </summary>
+        /// <param name="commandName">A TCommandEnum that is the command to execute.</param>
+        /// <param name="parameterName">A TParameterEnum indicating the name of the parameter.</param>
+        /// <param name="parameterValue">An object indicating the value of the parameter.</param>
         /// <param name="result">An int that will be set to the result of the execution.</param>
         /// <returns>An int containing the value of the result parametr.</returns>
         protected int ExecuteNonQuery(TCommandEnum commandName, TParameterEnum parameterName, object parameterValue, out int executionResult)
@@ -215,6 +226,18 @@ namespace MPL.Common.Database
             executionResult = ExecuteNonQuery(TheCommand, out int ReturnValue);
 
             return ReturnValue;
+        }
+        /// <summary>
+        /// Executes the specified command with a single parameter in non-query mode.
+        /// </summary>
+        /// <param name="commandName">A TCommandEnum that is the command to execute.</param>
+        /// <param name="parameterNames">An array of TParameterEnum indicating the name of the parameters.</param>
+        /// <param name="parameterValues">An array of object indicating the value of the parameters.</param>
+        /// <param name="result">An int that will be set to the result of the execution.</param>
+        /// <returns>An int containing the value of the result parametr.</returns>
+        protected int ExecuteNonQuery(TCommandEnum commandName, TParameterEnum[] parameterNames, object[] parameterValues)
+        {
+            return ExecuteNonQuery(commandName, parameterNames, parameterValues, out _);
         }
         /// <summary>
         /// Executes the specified command with a single parameter in non-query mode.
