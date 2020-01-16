@@ -26,6 +26,64 @@ namespace MPL.Common.Win32.WinSCard
     }
 
     /// <summary>
+    /// An enumeration that defines the action to take on a card when closed.
+    /// </summary>
+    public enum SCardDisposition : uint
+    {
+        /// <summary>
+        /// Eject the card.
+        /// </summary>
+        EjectCard = 3,
+
+        /// <summary>
+        /// Do not do anything specific.
+        /// </summary>
+        LeaveCard = 0,
+
+        /// <summary>
+        /// Reset the card.
+        /// </summary>
+        ResetCard = 1,
+
+        /// <summary>
+        /// Power down the card.
+        /// </summary>
+        UnpowerCard = 2
+    }
+
+    /// <summary>
+    /// An enumeration that defines the protocols for an winscard card operation.
+    /// </summary>
+    [Flags()]
+    public enum SCardProtocol : uint
+    {
+        /// <summary>
+        /// No protocol is defined. May only be used when the reader share mode is Direct.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// The protocal is raw.
+        /// </summary>
+        Raw = 4,
+
+        /// <summary>
+        /// The protocol is T=0.
+        /// </summary>
+        T0 = 1,
+
+        /// <summary>
+        /// The protocol is T=1.
+        /// </summary>
+        T1 = 2,
+
+        /// <summary>
+        /// The protocol is T=15.
+        /// </summary>
+        T15 = 8
+    }
+
+    /// <summary>
     /// An enumeration that defines a reader event state.
     /// </summary>
     [Flags()]
@@ -462,6 +520,32 @@ namespace MPL.Common.Win32.WinSCard
         /// 
         /// </summary>
         SCARD_W_WRONG_CHV = 0x8010006B
+    }
+
+    /// <summary>
+    /// An enumeration that defines the share mode of a winscard reader.
+    /// </summary>
+    public enum SCardShareMode : uint
+    {
+        /// <summary>
+        /// The share mode is undefined.
+        /// </summary>
+        Undefined = 0,
+
+        /// <summary>
+        /// The application is allocating the reader for private use and may not be shared.
+        /// </summary>
+        Direct = 3,
+
+        /// <summary>
+        /// The application is not willing to share the card with other applications.
+        /// </summary>
+        Exclusive = 1,
+
+        /// <summary>
+        /// The application is willing to share the card with other applications.
+        /// </summary>
+        Shared = 2
     }
 
     #endregion

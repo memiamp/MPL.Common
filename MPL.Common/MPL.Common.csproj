@@ -92,6 +92,7 @@
     <Compile Include="Win32\WinSCardIntegration.cs" />
     <Compile Include="Win32\WinSCard\Globals.cs" />
     <Compile Include="Win32\WinSCard\NativeMethods.cs" />
+    <Compile Include="Win32\WinSCard\SCARD_IO_REQUEST.cs" />
     <Compile Include="Win32\WinSCard\SCARD_READERSTATE.cs" />
   </ItemGroup>
   <ItemGroup />

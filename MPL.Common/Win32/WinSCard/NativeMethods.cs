@@ -12,6 +12,28 @@ namespace MPL.Common.Win32.WinSCard
         #region Declarations
         #region _Dll Imports_
         /// <summary>
+        /// Establishes a connection between a calling application and a smart card in a specific reader.
+        /// </summary>
+        /// <param name="hContext">An IntPtr that is the established resource manager context to use.</param>
+        /// <param name="szReader">A string containing the name of the reader that contains the target card.</param>
+        /// <param name="dwShareMode">A SCardShareMode that indicates whether other applications may form connections to this card.</param>
+        /// <param name="dwPreferredProtocols">A SCardProtocol that indicates the acceptable protocols for the connection.</param>
+        /// <param name="phCard">An IntPtr that will be set to the handle that identifies the connected smart card.</param>
+        /// <param name="pdwActiveProtocol">An SCardProtocol that will be set to the established active protocol.</param>
+        /// <returns>An uint indicating the result of the operation.</returns>
+        [DllImport("winscard.dll")]
+        private static extern uint SCardConnect(IntPtr hContext, string szReader, SCardShareMode dwShareMode, SCardProtocol dwPreferredProtocols, out IntPtr phCard, out SCardProtocol pdwActiveProtocol);
+
+        /// <summary>
+        /// Terminates a connection previously opened between the calling application and a smart card in a reader.
+        /// </summary>
+        /// <param name="hCard">An IntPtr that is the handle to the card.</param>
+        /// <param name="dwDisposition">A SCardDisposition indicating the action to take on the card in the connected reader upon close.</param>
+        /// <returns></returns>
+        [DllImport("winscard.dll")]
+        private static extern uint SCardDisconnect(IntPtr hCard, SCardDisposition dwDisposition);
+
+        /// <summary>
         /// Establish the context within which winscard operations are performed.
         /// </summary>
         /// <param name="dwScope">A SCardContextScope indicating the scope of the resource manager context.</param>
@@ -52,11 +74,69 @@ namespace MPL.Common.Win32.WinSCard
         [DllImport("winscard.dll")]
         private static extern uint SCardReleaseContext(IntPtr hContext);
 
+        /// <summary>
+        /// Sends a service request to the specified smart card and receives data base from it.
+        /// </summary>
+        /// <param name="hCard">An IntPtr that is the handle to the card.</param>
+        /// <param name="pioSendPci">A SCARD_IO_REQUEST containing the instruction header.</param>
+        /// <param name="pbSendBuffer">An array of byte containing the data to be written to the card.</param>
+        /// <param name="cbSendLength">An uint indicating the length of the send buffer.</param>
+        /// <param name="pioRecvPci">A SCARD_IO_REQUEST that will be set to the protocol header structure.</param>
+        /// <param name="pbRecvBuffer">An array of byte that will be set to the data returned from the card.</param>
+        /// <param name="pcbRecvLength">An uint indicating the length of the return buffer.</param>
+        /// <returns>An uint indicating the result of the operation.</returns>
+        [DllImport("winscard.dll")]
+        private static extern uint SCardTransmit(IntPtr hCard, ref SCARD_IO_REQUEST pioSendPci, byte[] pbSendBuffer, uint cbSendLength, ref SCARD_IO_REQUEST pioRecvPci, byte[] pbRecvBuffer, out uint pcbRecvLength);
+
         #endregion
         #endregion
 
         #region Methods
         #region _Internal_
+        /// <summary>
+        /// Connects to a card on the specified reader using the specified parameters.
+        /// </summary>
+        /// <param name="context">An IntPtr that is the context to use.</param>
+        /// <param name="readerName">A string containing the name of the reader to use.</param>
+        /// <param name="cardHandle">An IntPtr that will be set to the handle of the card.</param>
+        /// <param name="actualProtocol">A SCardProtocol that will be set to the established protocol.</param>
+        /// <param name="result">A SCardResponse that will be set to the result of the operation.</param>
+        /// <param name="shareMode">A SCardShareMode that indicates other applications can connect to the card.</param>
+        /// <param name="protocol">A SCardProtocol indicating the acceptable protocols to use for the connection.</param>
+        /// <returns>A bool that indicates whether the operation was a success.</returns>
+        internal static bool ConnectCard(IntPtr context, string readerName, out IntPtr cardHandle, out SCardProtocol actualProtocol, out SCardResponse result, SCardShareMode shareMode = SCardShareMode.Shared, SCardProtocol protocol = SCardProtocol.T0)
+        {
+            uint resultCode;
+            bool returnValue = false;
+
+            resultCode = SCardConnect(context, readerName, shareMode, protocol, out cardHandle, out actualProtocol);
+            result = (SCardResponse)resultCode;
+            if (result == SCardResponse.SCARD_S_SUCCESS)
+                returnValue = true;
+
+            return returnValue;
+        }
+
+        /// <summary>
+        /// Disconnects the specified card.
+        /// </summary>
+        /// <param name="cardHandle">An IntPtr that is the handle to the card.</param>
+        /// <param name="result">A SCardResponse that will be set to the result of the operation.</param>
+        /// <param name="cardDisposition">A SCardDisposition that indicates the action to take in the connected reader once disconnected.</param>
+        /// <returns>A bool that indicates whether the operation was a success.</returns>
+        internal static bool DisconnectCard(IntPtr cardHandle, out SCardResponse result, SCardDisposition cardDisposition = SCardDisposition.LeaveCard)
+        {
+            uint resultCode;
+            bool returnValue = false;
+
+            resultCode = SCardDisconnect(cardHandle, cardDisposition);
+            result = (SCardResponse)resultCode;
+            if (result == SCardResponse.SCARD_S_SUCCESS)
+                returnValue = true;
+
+            return returnValue;
+        }
+
         /// <summary>
         /// Establishes a context for winscard operations.
         /// </summary>
@@ -161,6 +241,39 @@ namespace MPL.Common.Win32.WinSCard
             return returnValue;
         }
 
+        internal static bool TransmitToCard(IntPtr cardHandle, SCardProtocol protocol, byte[] data, out byte[] response, out SCardResponse result)
+        {
+            bool returnValue = false;
+
+            // Defaults
+            response = null;
+            result = SCardResponse.SCARD_E_INVALID_HANDLE;
+
+            if (cardHandle != IntPtr.Zero)
+            {
+                SCARD_IO_REQUEST receiveProtocol;
+                uint resultCode;
+                SCARD_IO_REQUEST sendProtocol;
+
+                // Setup
+                sendProtocol = GetNewIoRequest(protocol);
+                receiveProtocol = GetNewIoRequest(protocol);
+
+                resultCode = SCardTransmit(cardHandle, ref sendProtocol, data, (uint)data.Length, ref receiveProtocol, null, out uint receivedSize);
+                result = (SCardResponse)resultCode;
+                if (result == SCardResponse.SCARD_S_SUCCESS)
+                {
+                    response = new byte[receivedSize];
+                    resultCode = SCardTransmit(cardHandle, ref sendProtocol, data, (uint)data.Length, ref receiveProtocol, response, out receivedSize);
+                    result = (SCardResponse)resultCode;
+                    if (result == SCardResponse.SCARD_S_SUCCESS)
+                        returnValue = true;
+                }
+            }
+
+            return returnValue;
+        }
+
         #endregion
         #region _Private_
         private static string GetGroupName(SCardReaderGroup group)
@@ -190,6 +303,15 @@ namespace MPL.Common.Win32.WinSCard
             }
 
             return returnValue;
+        }
+
+        private static SCARD_IO_REQUEST GetNewIoRequest(SCardProtocol protocol)
+        {
+            return new SCARD_IO_REQUEST
+            {
+                dwProtocol = protocol,
+                cbPciLength = (uint)Marshal.SizeOf(typeof(SCARD_IO_REQUEST))
+            };
         }
 
         #endregion
