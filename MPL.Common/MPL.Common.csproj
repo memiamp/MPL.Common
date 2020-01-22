@@ -55,6 +55,7 @@
     <Compile Include="ComponentModel\DataAnnotations\NonZeroEnumValidationAttribute.cs" />
     <Compile Include="ComponentModel\LocalizedDisplayNameAttribute.cs" />
     <Compile Include="ConvertTo.cs" />
+    <Compile Include="DateTimeExtensions.cs" />
     <Compile Include="EventHandlerExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Net\Sockets\NetworkStreamExtensions.cs" />
