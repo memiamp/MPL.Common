@@ -76,6 +76,7 @@
     <Compile Include="Security\Principal\IPrincipalExtensions.cs" />
     <Compile Include="Threading\CancellationTokenExtensions.cs" />
     <Compile Include="Threading\Tasks\TaskExtensions.cs" />
+    <Compile Include="TimeSpanExtensions.cs" />
     <Compile Include="Win32\ConsoleOutput.cs" />
     <Compile Include="Win32\HttpApiIntegration.cs" />
     <Compile Include="Win32\HttpApi\Globals.cs" />

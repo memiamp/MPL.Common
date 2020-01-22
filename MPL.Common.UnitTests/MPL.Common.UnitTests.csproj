@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArrayExtensionsTests.cs" />
+    <Compile Include="TimeSpanExtensionsTests.cs" />
     <Compile Include="ByteExtensionsTests.cs" />
     <Compile Include="Collections\Concurrent\ConcurrentListTests.cs" />
     <Compile Include="Collections\Concurrent\ConcurrentQueueExtensionsTests.cs" />
