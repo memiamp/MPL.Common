@@ -207,7 +207,7 @@ namespace MPL.Common.Database
         /// <returns>An int containing the value of the result parametr.</returns>
         protected int ExecuteNonQuery(TCommandEnum commandName, TParameterEnum parameterName, object parameterValue)
         {
-            return ExecuteNonQuery(commandName, parameterName, parameterName, out _);
+            return ExecuteNonQuery(commandName, parameterName, parameterValue, out _);
         }
         /// <summary>
         /// Executes the specified command with a single parameter in non-query mode.
