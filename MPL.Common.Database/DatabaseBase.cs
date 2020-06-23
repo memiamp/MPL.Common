@@ -648,6 +648,16 @@ namespace MPL.Common.Database
             return ReturnValue;
         }
 
+        /// <summary>
+        /// Can be overridden to provide additional processing of connection parameters prior to setting the local connection parameter value.
+        /// </summary>
+        /// <param name="connectionParameters">A string containing the raw connection parameters supplied.</param>
+        /// <returns>A string that contains the actual connection parameter to use.</returns>
+        protected virtual string OnSetConnectionParameters(string connectionParameters)
+        {
+            return connectionParameters;
+        }
+
         #endregion
         #region _Public_
         /// <summary>
@@ -801,7 +811,7 @@ namespace MPL.Common.Database
         string IDatabaseBase<TParameterEnum, TTableEnum>.ConnectionParameters
         {
             get { return _ConnectionString; }
-            set { _ConnectionString = value; }
+            set { _ConnectionString = OnSetConnectionParameters(value); }
         }
 
         #endregion
