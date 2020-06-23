@@ -52,6 +52,7 @@
     <Compile Include="Collections\Concurrent\IConcurrentList`1.cs" />
     <Compile Include="Collections\MarshalByRefList`1.cs" />
     <Compile Include="Collections\Specialized\StringCollectionExtensions.cs" />
+    <Compile Include="ComparableBase`1.cs" />
     <Compile Include="ComponentModel\DataAnnotations\NonZeroEnumValidationAttribute.cs" />
     <Compile Include="ComponentModel\LocalizedDisplayNameAttribute.cs" />
     <Compile Include="ConvertTo.cs" />
