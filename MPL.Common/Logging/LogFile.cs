@@ -15,15 +15,12 @@ namespace MPL.Common.Logging
         static LogFile()
         {
             _Consoles = new ConcurrentList<IConsole>();
-            LogFilePath = AppDomain.CurrentDomain.BaseDirectory;
+            _LogFilePath = AppDomain.CurrentDomain.BaseDirectory;
             MaximumPriority = LogFileEntryPriority.Debug;
             _Messages = new SimpleConcurrentQueue<string>();
             _PreviousMessages = new List<string>();
 
             LogWriter.LogMessage("Created log file");
-
-            // Start by default
-            Start();
         }
 
         #endregion
@@ -33,6 +30,7 @@ namespace MPL.Common.Logging
         private static IList<IConsole> _Consoles;
         private static bool _IsRunning;
         private static StreamWriter _LogFile;
+        private static string _LogFilePath;
         private static SimpleConcurrentQueue<string> _Messages;
         private static List<string> _PreviousMessages;
         private static Thread _RunLogWriterThread;
@@ -84,20 +82,24 @@ namespace MPL.Common.Logging
         {
             CloseLogFile();
 
-            // Create the filename
-            FileName = DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt";
-            FileName = Path.Combine(LogFilePath, FileName);
-            if (File.Exists(FileName))
-                FileName = Path.Combine(LogFilePath, Path.GetFileNameWithoutExtension(FileName) + "_" + Guid.NewGuid().ToString() + ".txt");
-
-            // Create the log file
             try
             {
-                _LogFile = File.CreateText(FileName);
+                string fileName;
+                int retryCounter = 0;
+
+                // Create the filename
+                fileName = DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt";
+                fileName = Path.Combine(_LogFilePath, fileName);
+                while (File.Exists(fileName) && retryCounter++ < 10)
+                    fileName = Path.Combine(_LogFilePath, Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString() + ".txt");
+
+                // Create the log file
+                _LogFile = File.CreateText(fileName);
+                FileName = fileName;
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"Unable to create log file '{LogFilePath}'", ex);
+                throw new InvalidOperationException($"Unable to create log file in '{_LogFilePath}'", ex);
             }
         }
 
@@ -166,6 +168,22 @@ namespace MPL.Common.Logging
             LogWriter.LogMessage("Stopped log file writer run thread");
         }
 
+        private static bool VerifyLogFilePath(string logFilePath)
+        {
+            bool returnValue = false;
+
+            try
+            {
+                returnValue = Directory.Exists(logFilePath);
+            }
+            catch (Exception)
+            {
+                returnValue = false;
+            }
+
+            return returnValue;
+        }
+
         private static void WriteLine(string message)
         {
             _Messages.Enqueue(message);
@@ -189,14 +207,27 @@ namespace MPL.Common.Logging
         {
             if (!_IsRunning)
             {
+                _IsRunning = true;
+                
                 LogWriter.LogMessage("Starting log file");
 
-                _IsRunning = true;
+                try
+                {
+                    CreateLogFile();
+                }
+                catch (Exception ex)
+                {
+                    _IsRunning = false;
+                    throw new InvalidOperationException("Unable to start log file", ex);
+                }
 
-                _RunLogWriterThread = new Thread(new ThreadStart(RunLogWriter)) { Name = "Log Writer Thread" };
-                _RunLogWriterThread.Start();
+                if (_IsRunning)
+                {
+                    _RunLogWriterThread = new Thread(new ThreadStart(RunLogWriter)) { Name = "Log Writer Thread" };
+                    _RunLogWriterThread.Start();
 
-                LogWriter.LogMessage("Log file started");
+                    LogWriter.LogMessage("Log file started");
+                }
             }
         }
 
@@ -227,7 +258,22 @@ namespace MPL.Common.Logging
         /// <summary>
         /// Gets or sets the path to create log files in.
         /// </summary>
-        public static string LogFilePath { get; set; }
+        public static string LogFilePath
+        {
+            get { return _LogFilePath; }
+            set
+            {
+                if (!_IsRunning)
+                {
+                    if (VerifyLogFilePath(value))
+                        _LogFilePath = value;
+                    else
+                        throw new DirectoryNotFoundException("The specified log file path is invalid");
+                }
+                else
+                    throw new InvalidOperationException("The log file path cannot be changed whilst the log file is running");
+            }
+        }
 
         /// <summary>
         /// Gets or sets the maximum logged priority.
