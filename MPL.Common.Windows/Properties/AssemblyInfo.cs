@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Martin Parkin")]
 [assembly: AssemblyProduct("MPL.Common.Windows")]
-[assembly: AssemblyCopyright("Copyright ©2008-2019 Martin Parkin")]
+[assembly: AssemblyCopyright("Copyright ©2008-2020 Martin Parkin")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
