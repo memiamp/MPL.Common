@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace MPL.Common
 {
@@ -6,6 +7,7 @@ namespace MPL.Common
     /// A class that defines base functionality of a comparable object.
     /// </summary>
     /// <typeparam name="T">A T that is the type to be compared.</typeparam>
+    [DataContract()]
     public abstract class ComparableBase<T> : IComparable, IComparable<T>
     {
         #region Methods
