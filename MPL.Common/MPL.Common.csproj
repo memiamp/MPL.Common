@@ -92,6 +92,7 @@
     <Compile Include="Win32\User32\Globals.cs" />
     <Compile Include="Win32\User32\LVGROUP.cs" />
     <Compile Include="Win32\User32\NativeMethods.cs" />
+    <Compile Include="Win32\User32\POINT.cs" />
     <Compile Include="Win32\WinSCardIntegration.cs" />
     <Compile Include="Win32\WinSCard\Globals.cs" />
     <Compile Include="Win32\WinSCard\NativeMethods.cs" />

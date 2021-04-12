@@ -11,6 +11,14 @@ namespace MPL.Common.Win32.User32
         #region Declarations
         #region _Dll Imports_
         /// <summary>
+        /// Gets the current cursor position.
+        /// </summary>
+        /// <param name="lpPoint">A POINT that will be set to the screen coordinates of the cursor.</param>
+        /// <returns>A bool indicating the result.</returns>
+        [DllImport("user32.dll")]
+        internal static extern bool GetCursorPos(out POINT lpPoint);
+
+        /// <summary>
         /// Sends the specified ListView message.
         /// </summary>
         /// <param name="hWnd">An IntPtr containing the handle to the window.</param>
@@ -31,6 +39,15 @@ namespace MPL.Common.Win32.User32
         /// <returns>An IntPtr containing the result.</returns>
         [DllImport("user32.dll", SetLastError = true, EntryPoint = "SendMessage")]
         private static extern IntPtr SendMessageWindowsMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+
+        /// <summary>
+        /// Sets the current cursor position.
+        /// </summary>
+        /// <param name="x">An int indicating the new x-coordinate of the cursor in screen coordinates.</param>
+        /// <param name="y">An int indicating the new y-coordinate of the cursor in screen coordinates.</param>
+        /// <returns></returns>
+        [DllImport("User32.Dll")]
+        internal static extern bool SetCursorPos(int x, int y);
 
         #endregion
         #endregion
