@@ -8,9 +8,77 @@ namespace MPL.Common
     public class ByteExtensionsTests
     {
         [TestMethod]
+        public void ByteExtensions_EqualTo_Exists()
+        {
+            Assert.IsTrue(ExtensionMethodTestHelper.ContainsNamedExtensionMethod(typeof(object[]), typeof(ByteExtensions), nameof(ByteExtensions.EqualTo), new[] { typeof(byte[]) }));
+        }
+
+        [TestMethod]
         public void ByteExtensions_ToHexString_Exists()
         {
             Assert.IsTrue(ExtensionMethodTestHelper.ContainsNamedExtensionMethod(typeof(object[]), typeof(ByteExtensions), nameof(ByteExtensions.ToHexString), new[] { typeof(string), typeof(bool) }));
+        }
+
+        [TestMethod]
+        public void EqualTo_DifferentLengths_ReturnsFalse()
+        {
+            byte[] dataA;
+            byte[] dataB;
+
+            dataA = TestDataTestHelper.GetBytes(10);
+            dataB = TestDataTestHelper.GetBytes(11);
+
+            Assert.IsFalse(dataA.EqualTo(dataB));
+        }
+
+        [TestMethod]
+        public void EqualTo_DifferentValues_ReturnsFalse()
+        {
+            byte[] dataA;
+            byte[] dataB;
+
+            dataA = TestDataTestHelper.GetBytes(10);
+            dataB = TestDataTestHelper.GetBytes(10);
+
+            Assert.IsFalse(dataA.EqualTo(dataB));
+        }
+
+        [ExpectedException(typeof(ArgumentNullException))]
+        [TestMethod]
+        public void EqualTo_NullParam1_ThrowsException()
+        {
+            byte[] dataA;
+            byte[] dataB;
+
+            dataA = null;
+            dataB = TestDataTestHelper.GetBytes();
+
+            dataA.EqualTo(dataB);
+        }
+
+        [ExpectedException(typeof(ArgumentNullException))]
+        [TestMethod]
+        public void EqualTo_NullParam2_ThrowsException()
+        {
+            byte[] dataA;
+            byte[] dataB;
+
+            dataA = TestDataTestHelper.GetBytes();
+            dataB = null;
+
+            dataA.EqualTo(dataB);
+        }
+
+        [TestMethod]
+        public void EqualTo_ValidValues_ReturnsTrue()
+        {
+            byte[] dataA;
+            byte[] dataB;
+
+            dataA = TestDataTestHelper.GetBytes();
+            dataB = dataA;
+
+            Assert.IsTrue(dataA.EqualTo(dataB));
         }
 
         [TestMethod]
