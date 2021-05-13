@@ -19,37 +19,49 @@ namespace MPL.Common.Reflection
         /// <returns>A T that is the created instance.</returns>
         public static T CreateInstance(string assembly, string typeName, object[] parameters = null)
         {
-            T ReturnValue = default(T);
+            T returnValue;
 
             if (TypeFinder.TryFindType(assembly, typeName, out Type TheType))
-            {
-                try
-                {
-                    object CreatedObject;
-
-                    if (parameters != null)
-                        CreatedObject = Activator.CreateInstance(TheType, parameters);
-                    else
-                        CreatedObject = Activator.CreateInstance(TheType);
-                    if (CreatedObject != null)
-                    {
-                        if (CreatedObject is T)
-                            ReturnValue = (T)CreatedObject;
-                        else
-                            throw new InvalidOperationException("The created type instance is not of the expected Type");
-                    }
-                    else
-                        throw new InvalidOperationException("The created type instance was null");
-                }
-                catch (Exception ex)
-                {
-                    throw new InvalidOperationException("Unable to create an instance of the requested type", ex);
-                }
-            }
+                returnValue = CreateInstance(TheType, parameters);
             else
                 throw new ArgumentException($"Cannot create type instance: Unable to locate the type '{typeName}'", nameof(typeName));
 
-            return ReturnValue;
+            return returnValue;
+        }
+        /// <summary>
+        /// Create an instance of the database with the specified type name.
+        /// </summary>
+        /// <param name="type">A Type that is the type to be created.</param>
+        /// <param name="parameters">An array of object that can contain parameters used to construct the target type.</param>
+        /// <returns>A T that is the created instance.</returns>
+        public static T CreateInstance(Type type, object[] parameters = null)
+        {
+            T returnValue;
+
+            try
+            {
+                object createdObject;
+
+                if (parameters != null)
+                    createdObject = Activator.CreateInstance(type, parameters);
+                else
+                    createdObject = Activator.CreateInstance(type);
+                if (createdObject != null)
+                {
+                    if (createdObject is T castCreatedObejct)
+                        returnValue = castCreatedObejct;
+                    else
+                        throw new InvalidOperationException("The created type instance is not of the expected Type");
+                }
+                else
+                    throw new InvalidOperationException("The created type instance was null");
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Unable to create an instance of the requested type", ex);
+            }
+
+            return returnValue;
         }
 
         #endregion
