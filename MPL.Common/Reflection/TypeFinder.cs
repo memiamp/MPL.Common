@@ -33,27 +33,34 @@ namespace MPL.Common.Reflection
         #endregion
         #region _Public_
         /// <summary>
-        /// Finds all types that are a subclass of the specified type.
+        /// Finds all types that are a subclass of the specified type, or if T is an interface, implements that interface.
         /// </summary>
         /// <typeparam name="T">The type to find subclasses of.</typeparam>
-        /// <param name="subclassType">A Type that is the subclass type.</param>
         /// <param name="excludeSystemAssemblies">A bool that indicates whether to exclude any Microsoft.Net system assemblies from the search.</param>
+        /// <param name="includeAbstractTypes">A bool that indicates whether abstract types should be included.</param>
         /// <returns>An array of Type containing the types.</returns>
-        public static Type[] FindAllTypesOf<T>(bool excludeSystemAssemblies = true)
+        public static Type[] FindAllTypesOf<T>(bool excludeSystemAssemblies = true, bool includeAbstractTypes = false)
         {
+            bool isInterface;
             List<Type> returnValue;
-            
+            Type tType;
+
+            tType = typeof(T);
+            isInterface = tType.IsInterface;
+
             returnValue = new List<Type>();
             try
             {
                 foreach (Assembly Item in AppDomain.CurrentDomain.GetAssemblies())
                 {
                     if (!excludeSystemAssemblies ||
-                        (excludeSystemAssemblies && !Item.FullName.StartsWith("System") && !Item.FullName.StartsWith("Microsoft")))
+                        (excludeSystemAssemblies && !Item.FullName.StartsWith("mscorlib") && !Item.FullName.StartsWith("System.") && !Item.FullName.StartsWith("Microsoft.")))
                     {
                         foreach (Type type in Item.GetTypes())
                         {
-                            if (!type.IsAbstract && type.IsSubclassOf(typeof(T)))
+                            if ((includeAbstractTypes || !type.IsAbstract) &&
+                                ((isInterface && tType.IsAssignableFrom(type)) ||
+                                type.IsSubclassOf(tType)))
                             {
                                 returnValue.Add(type);
                             }
