@@ -54,7 +54,7 @@ namespace MPL.Common.Reflection
                 foreach (Assembly Item in AppDomain.CurrentDomain.GetAssemblies())
                 {
                     if (!excludeSystemAssemblies ||
-                        (excludeSystemAssemblies && !Item.FullName.StartsWith("mscorlib") && !Item.FullName.StartsWith("System.") && !Item.FullName.StartsWith("Microsoft.")))
+                        (excludeSystemAssemblies && !Item.FullName.StartsWith("mscorlib") && !Item.FullName.StartsWith("System") && !Item.FullName.StartsWith("Microsoft.")))
                     {
                         foreach (Type type in Item.GetTypes())
                         {
