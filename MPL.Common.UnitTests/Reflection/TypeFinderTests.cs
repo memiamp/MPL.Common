@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MPL.Common.Reflection;
 using System;
 using System.Reflection;
 
@@ -11,6 +10,26 @@ namespace MPL.Common.Reflection
         private const string cASSEMBLY_NAME = "MPL.Common.UnitTests";
         private const string cCLASS_FULL_NAME = "MPL.Common.Reflection.TypeFinderTests";
         private const string cCLASS_INVALID_NAME = "b8a61df7fc984040bda1712265de741e";
+
+        [TestMethod]
+        public void FindAllTypesOf_ValidAbstractType_FindsSingleType()
+        {
+            Type[] result;
+
+            result = TypeFinder.FindAllTypesOf<TypeFinderAbstractBaseClass>();
+            Assert.IsNotNull(result);
+            Assert.AreEqual(2, result.Length);
+        }
+
+        [TestMethod]
+        public void FindAllTypesOf_ValidType_FindsTypes()
+        {
+            Type[] result;
+
+            result = TypeFinder.FindAllTypesOf<TypeFinderBaseClass>();
+            Assert.IsNotNull(result);
+            Assert.AreEqual(3, result.Length);
+        }
 
         [TestMethod]
         public void TryFindType_InvalidAssembly_IsNotFound()

@@ -28,7 +28,7 @@ namespace MPL.Common.Reflection
         }
 
         [TestMethod]
-        public void CreateInstance_InvalidType_IsNotFound()
+        public void CreateInstance_NamedTypeInvalidType_IsNotFound()
         {
             try
             {
@@ -44,13 +44,47 @@ namespace MPL.Common.Reflection
         }
 
         [TestMethod]
-        public void CreateInstance_ValidType_IsFound()
+        public void CreateInstance_NamedTypeValidType_IsFound()
         {
             try
             {
                 InstanceCreatorTests createdObject;
 
                 createdObject = InstanceCreator<InstanceCreatorTests>.CreateInstance(Assembly.GetExecutingAssembly().FullName, cCLASS_FULL_NAME);
+
+                Assert.IsNotNull(createdObject);
+                Assert.IsInstanceOfType(createdObject, typeof(InstanceCreatorTests));
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
+
+        [TestMethod]
+        public void CreateInstance_TypeInvalidType_IsNotFound()
+        {
+            try
+            {
+                InstanceCreatorTests createdObject;
+
+                createdObject = InstanceCreator<InstanceCreatorTests>.CreateInstance(typeof(string));
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message != "Unable to create an instance of the requested type")
+                    Assert.Fail();
+            }
+        }
+
+        [TestMethod]
+        public void CreateInstance_TypeValidType_IsFound()
+        {
+            try
+            {
+                InstanceCreatorTests createdObject;
+
+                createdObject = InstanceCreator<InstanceCreatorTests>.CreateInstance(typeof(InstanceCreatorTests));
 
                 Assert.IsNotNull(createdObject);
                 Assert.IsInstanceOfType(createdObject, typeof(InstanceCreatorTests));

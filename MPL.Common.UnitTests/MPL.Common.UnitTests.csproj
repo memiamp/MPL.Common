@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="ArrayExtensionsTests.cs" />
     <Compile Include="DateTimeExtensionsTests.cs" />
+    <Compile Include="Reflection\TestSupportClasses.cs" />
     <Compile Include="StringExtensionsTests.cs" />
     <Compile Include="TimeSpanExtensionsTests.cs" />
     <Compile Include="ByteExtensionsTests.cs" />
