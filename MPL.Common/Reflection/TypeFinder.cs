@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace MPL.Common.Reflection
@@ -30,6 +31,15 @@ namespace MPL.Common.Reflection
             return ReturnValue;
         }
 
+        private static bool IsSystemAssembly(Assembly assembly)
+        {
+            return IsSystemAssembly(assembly.FullName);
+        }
+        private static bool IsSystemAssembly(string assemblyName)
+        {
+            return assemblyName.StartsWith("mscorlib") || assemblyName.StartsWith("System") || assemblyName.StartsWith("Microsoft");
+        }
+
         #endregion
         #region _Public_
         /// <summary>
@@ -54,7 +64,7 @@ namespace MPL.Common.Reflection
                 foreach (Assembly Item in AppDomain.CurrentDomain.GetAssemblies())
                 {
                     if (!excludeSystemAssemblies ||
-                        (excludeSystemAssemblies && !Item.FullName.StartsWith("mscorlib") && !Item.FullName.StartsWith("System") && !Item.FullName.StartsWith("Microsoft.")))
+                        (excludeSystemAssemblies && !IsSystemAssembly(Item)))
                     {
                         foreach (Type type in Item.GetTypes())
                         {
@@ -76,16 +86,48 @@ namespace MPL.Common.Reflection
             return returnValue.ToArray();
         }
 
+
+        /// <summary>
+        /// Finds the first type matching the specified type name from the specified assembly.
+        /// </summary>
+        /// <param name="assembly">An Assembly that is the assembly to search.</param>
+        /// <param name="typeName">A string containing the name of the type to find.</param>
+        /// <param name="type">A Type that will be set to the found type.</param>
+        /// <param name="onlyExportedTypes">A bool indicating whether to only look for exported (public) types.</param>
+        /// <returns>A bool that indicates whether the type was found</returns>
+        public static bool TryFindType(Assembly assembly, string typeName, out Type type, bool onlyExportedTypes = true)
+        {
+            bool ReturnValue = false;
+
+            // Defaults
+            type = null;
+
+            if (assembly != null)
+            {
+                Type[] types;
+
+                types = onlyExportedTypes ? assembly.GetExportedTypes() : assembly.GetTypes();
+                foreach (Type SubItem in types)
+                    if (SubItem.FullName == typeName)
+                    {
+                        type = SubItem;
+                        ReturnValue = true;
+                        break;
+                    }
+            }
+
+            return ReturnValue;
+        }
         /// <summary>
         /// Finds the first type matching the specified type name from the specified assembly.
         /// </summary>
         /// <param name="assemblyName">A string containing the assembly name that contains the type.</param>
         /// <param name="typeName">A string containing the name of the type to find.</param>
         /// <param name="type">A Type that will be set to the found type.</param>
+        /// <param name="onlyExportedTypes">A bool indicating whether to only look for exported (public) types.</param>
         /// <returns>A bool that indicates whether the type was found</returns>
-        public static bool TryFindType(string assemblyName, string typeName, out Type type)
+        public static bool TryFindType(string assemblyName, string typeName, out Type type, bool onlyExportedTypes = true)
         {
-            bool ReturnValue = false;
             Assembly TargetAssembly = null;
 
             // Defaults
@@ -103,18 +145,37 @@ namespace MPL.Common.Reflection
             if (TargetAssembly == null)
                 TryLoadAssembly(assemblyName, out TargetAssembly);
 
-            if (TargetAssembly != null)
+            return TryFindType(TargetAssembly, typeName, out type, onlyExportedTypes);
+        }
+        /// <summary>
+        /// Finds the first type matching the specified type name from all loaded assemblies.
+        /// </summary>
+        /// <param name="typeName">A string containing the name of the type to find.</param>
+        /// <param name="type">A Type that will be set to the found type.</param>
+        /// <param name="excludeSystemAssemblies">A bool that indicates whether to exclude any Microsoft.Net system assemblies from the search.</param>
+        /// <param name="onlyExportedTypes">A bool indicating whether to only look for exported (public) types.</param>
+        /// <returns>A bool that indicates whether the type was found</returns>
+        public static bool TryFindType(string typeName, out Type type, bool excludeSystemAssemblies = true, bool onlyExportedTypes = true)
+        {
+            bool returnValue = false;
+            Assembly[] targetAssemblies;
+
+            // Defaults
+            type = null;
+
+            targetAssemblies = AppDomain.CurrentDomain.GetAssemblies().Where(x => !excludeSystemAssemblies || !IsSystemAssembly(x)).ToArray();
+            if (targetAssemblies?.Length > 0)
             {
-                foreach (Type SubItem in TargetAssembly.GetExportedTypes())
-                    if (SubItem.FullName == typeName)
+                foreach (var assembly in targetAssemblies)
+                    if (TryFindType(assembly, typeName, out Type foundType, onlyExportedTypes))
                     {
-                        type = SubItem;
-                        ReturnValue = true;
+                        type = foundType;
+                        returnValue = true;
                         break;
                     }
             }
 
-            return ReturnValue;
+            return returnValue;
         }
 
         /// <summary>
