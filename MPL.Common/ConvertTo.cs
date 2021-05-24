@@ -19,17 +19,22 @@ namespace MPL.Common
         /// <returns>A bool indicating success.</returns>
         public static bool GetObjectAsValue<T>(object Value, out T value)
         {
-            bool ReturnValue = false;
+            bool returnValue = false;
 
             // Defaults
-            value = default(T);
+            value = default;
 
             if (Value != null)
             {
                 if (Value is T)
                 {
-                    ReturnValue = true;
                     value = (T)Value;
+                    returnValue = true;
+                }
+                else if (typeof(T).IsEnum)
+                {
+                    value = (T)Enum.Parse(typeof(T), Value.ToString());
+                    returnValue = true;
                 }
                 else
                 {
@@ -38,21 +43,21 @@ namespace MPL.Common
                     TryParseMethod = typeof(T).GetMethod("TryParse", new Type[] { typeof(string), typeof(T).MakeByRefType() });
                     if (TryParseMethod != null)
                     {
-                        object Result;
-                        object[] TryParseParams;
+                        object result;
+                        object[] tryParseParams;
 
-                        TryParseParams = new object[] { Value.ToString(), null };
-                        Result = TryParseMethod.Invoke(null, TryParseParams);
-                        if (Result != null && Result is bool && (bool)Result)
+                        tryParseParams = new object[] { Value.ToString(), null };
+                        result = TryParseMethod.Invoke(null, tryParseParams);
+                        if (result != null && result is bool && (bool)result)
                         {
-                            value = (T)TryParseParams[1];
-                            ReturnValue = true;
+                            value = (T)tryParseParams[1];
+                            returnValue = true;
                         }
                     }
                 }
             }
 
-            return ReturnValue;
+            return returnValue;
         }
 
         #endregion
