@@ -11,10 +11,10 @@ namespace MPL.Common.Reflection
         #region Methods
         #region _Public_
         /// <summary>
-        /// Create an instance of the database with the specified type name.
+        /// Create an instance of the type with the specified name from the specified assmebly.
         /// </summary>
         /// <param name="assembly">A string containing the name of the assembly in which the type is found.</param>
-        /// <param name="typeName">A string containing the type name of the database to create.</param>
+        /// <param name="typeName">A string containing the name of the type to create.</param>
         /// <param name="parameters">An array of object that can contain parameters used to construct the target type.</param>
         /// <returns>A T that is the created instance.</returns>
         public static T CreateInstance(string assembly, string typeName, object[] parameters = null)
@@ -29,7 +29,26 @@ namespace MPL.Common.Reflection
             return returnValue;
         }
         /// <summary>
-        /// Create an instance of the database with the specified type name.
+        /// Create an instance of the type with the specified name.
+        /// </summary>
+        /// <param name="typeName">A string containing the name of the type to create.</param>
+        /// <param name="parameters">An array of object that can contain parameters used to construct the target type.</param>
+        /// <returns>A T that is the created instance.</returns>
+        /// <remarks>The first found type that matches the specified type name will be created.</remarks>
+        public static T CreateInstance(string typeName, object[] parameters = null)
+        {
+            T returnValue;
+
+            if (TypeFinder.TryFindType(typeName, out Type TheType))
+                returnValue = CreateInstance(TheType, parameters);
+            else
+                throw new ArgumentException($"Cannot create type instance: Unable to locate the type '{typeName}'", nameof(typeName));
+
+            return returnValue;
+        }
+
+        /// <summary>
+        /// Create an instance of the specified type.
         /// </summary>
         /// <param name="type">A Type that is the type to be created.</param>
         /// <param name="parameters">An array of object that can contain parameters used to construct the target type.</param>
