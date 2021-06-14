@@ -70,6 +70,7 @@
     <Compile Include="RandomNumberGenerator.cs" />
     <Compile Include="Reflection\DynamicCodeExecutor.cs" />
     <Compile Include="Reflection\InstanceCreator`1.cs" />
+    <Compile Include="Reflection\MethodInvoker.cs" />
     <Compile Include="Reflection\TypeFinder.cs" />
     <Compile Include="Runtime\Serialization\Serializer.cs" />
     <Compile Include="Runtime\Serialization\Serializer`1.cs" />
