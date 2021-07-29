@@ -73,6 +73,7 @@
     <Compile Include="Reflection\MethodInvoker.cs" />
     <Compile Include="Reflection\TypeFinder.cs" />
     <Compile Include="Runtime\Serialization\Serializer.cs" />
+    <Compile Include="Runtime\Serialization\SerializerOptions.cs" />
     <Compile Include="Runtime\Serialization\Serializer`1.cs" />
     <Compile Include="Collections\Concurrent\SimpleConcurrentQueue`1.cs" />
     <Compile Include="Security\Principal\IIdentityExtensions.cs" />
